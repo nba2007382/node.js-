@@ -1,0 +1,16 @@
+const showlist = require('./showlist')
+const chart = require('./char')
+const monito = require('./monito')
+const admin = require('./admin')
+const authorizations = require('./authorizations')
+const v2 = require('./v2')
+const check = require('./check')
+module.exports = app => {
+    app.use('/showlist', showlist)
+    app.use('/chart', chart)
+    app.use('/monito', monito)
+    app.use('/admin', admin)
+    app.use('/authorizations', authorizations)
+    app.use('/v2', v2)
+    app.use('/check', check)
+};
