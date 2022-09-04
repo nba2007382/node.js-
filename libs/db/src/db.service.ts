@@ -10,17 +10,79 @@ import { House } from '../models/house/house.model';
 import { Unprice } from '../models/house/unprice.model'
 import { BeiKe } from '../models/monito/BeiKe.model';
 import { JD } from '../models/monito/JD.model';
+import { CookieService } from '@lib/cookie';
+import { WeiBo } from '../models/monito/WeiBo.model';
 @Injectable()
 export class DbService {
   constructor(
     private readonly axios: HttpService,
+    private readonly cookieService: CookieService,
     @InjectModel(House) private readonly house: ReturnModelType<typeof House>,
     @InjectModel(Unprice) private readonly unprice: ReturnModelType<typeof Unprice>,
     @InjectModel(BeiKe) private readonly monito_BeiKe: ReturnModelType<typeof BeiKe>,
-    @InjectModel(JD) private readonly monito_JD: ReturnModelType<typeof JD>
+    @InjectModel(JD) private readonly monito_JD: ReturnModelType<typeof JD>,
+    @InjectModel(WeiBo) private readonly monito_WeiBo: ReturnModelType<typeof WeiBo>
     ) {
 
     }
+  
+  async monito_WeiBoUpdata () {
+    console.log('WB更新');
+    const data = await this.monito_WeiBo.find({})
+    for (let i = 0; i < data.length; i++) {
+      const el = data[i];
+      const url = el.url
+      const email=el.from
+      const pattern = /(?<=https:[/][/]weibo.com[/]u[/])\d+/
+      const id = pattern.exec(url)
+      let page = 1
+      for (let i = 0; i < page; i++) {
+        const updataUrl = 'https://weibo.com/ajax/statuses/mymblog?uid=' + id + '&page=' + page + '&feature=0'
+        await updataWB(updataUrl, email, url, this.cookieService, this.axios, this.monito_WeiBo).then(res => {
+          if (res == 1) {
+            page = page + 1;
+          };
+        });
+      };
+    };
+    console.log('微博更新完毕');
+    
+    async function updataWB(
+      updataUrl:string,
+      email:string [],
+      homeUrl:string,
+      cookieService: CookieService,
+      axios: HttpService,
+      monito_WeiBo: ReturnModelType<typeof WeiBo>) 
+      { 
+        let cookieData = await cookieService.getcookie();
+        cookieData = cookieData.data.sub ? cookieData : await cookieService.getcookie();
+        const cookie = `SUB=${cookieData.data.sub};SUBP=${cookieData.data.subp}`;
+        const res = await lastValueFrom(
+          axios.get(updataUrl, {
+            headers: {
+              Cookie: cookie
+            }
+          })
+        );
+        const html = res.data + '';
+        const data = JSON.parse(html);
+        const { list } = data.data;
+        if (list.length !== 0) {
+          for (let i = 0; i < list.length; i++) {
+            const el = list[i];
+            el.from = email;
+            el.url = homeUrl;
+            list[i] = el;
+          };
+          await monito_WeiBo.insertMany(list, { ordered:false });
+          return 1;
+        } else {
+          return 0;
+        };
+      };
+  }  
+
   async monito_JdUpdata () {
     const data = await this.monito_JD.find({});
     for (let i = 0; i < data.length; i++) {

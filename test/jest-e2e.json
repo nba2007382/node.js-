@@ -12,6 +12,8 @@
   },
   "moduleNameMapper": {
     "@libs/db/(.*)": "<rootDir>/../libs/db/src/$1",
-    "@libs/db": "<rootDir>/../libs/db/src"
+    "@libs/db": "<rootDir>/../libs/db/src",
+    "@lib/cookie/(.*)": "<rootDir>/../libs/cookie/src/$1",
+    "@lib/cookie": "<rootDir>/../libs/cookie/src"
   }
 }

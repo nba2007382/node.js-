@@ -3,7 +3,7 @@ import { prop } from "@typegoose/typegoose";
 
 export class WeiBo {
   @prop({unique: true})
-  id: Number
+  id: number
 
   @prop({
     id:{
@@ -11,44 +11,44 @@ export class WeiBo {
     }
   })
   user: {
-    id: Number
-    screen_name: String,
-    profile_image_url: String,
+    id: number
+    screen_name: string,
+    profile_image_url: string,
   }
 
   @prop()
-  created_at: String
+  created_at: string
 
   @prop()
-  pic_infos: Object
+  pic_infos: object
 
   @prop()
-  text_raw: String
+  text_raw: string
 
   @prop()
-  text: String
+  text: string
 
   @prop()
   pic_ids: Array<any>
 
   @prop()
-  pic_num: Number
+  pic_num: number
 
   @prop()
-  isLongText: Boolean
+  isLongText: boolean
 
   @prop()
-  is_show_bulletin: Number
+  is_show_bulletin: number
 
   @prop()
-  isTop: Number
+  isTop: number
 
   @prop()
-  region_name: String
+  region_name: string
 
   @prop()
   from: Array<string>
 
   @prop()
-  url: String
+  url: string
 }

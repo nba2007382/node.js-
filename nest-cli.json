@@ -11,6 +11,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/db/tsconfig.lib.json"
       }
+    },
+    "cookie": {
+      "type": "library",
+      "root": "libs/cookie",
+      "entryFile": "index",
+      "sourceRoot": "libs/cookie/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cookie/tsconfig.lib.json"
+      }
     }
   },
   "compilerOptions": {

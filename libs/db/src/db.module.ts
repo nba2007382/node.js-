@@ -9,6 +9,7 @@ import { JD } from '../models/monito/JD.model';
 import { WeiBo } from '../models/monito/WeiBo.model';
 import { Movie } from '../models/movie/movie.model';
 import { HttpModule } from '@nestjs/axios';
+import { CookieModule } from '@lib/cookie';
 const models = TypegooseModule.forFeature([
   User,
   House,
@@ -24,6 +25,7 @@ const models = TypegooseModule.forFeature([
   imports: [
     TypegooseModule.forRoot('mongodb://localhost:27017/Steward'),
     HttpModule,
+    CookieModule,
     models
   ],
   providers: [DbService],
