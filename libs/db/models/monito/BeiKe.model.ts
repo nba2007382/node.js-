@@ -3,23 +3,23 @@ import { prop } from '@typegoose/typegoose';
 
 export class BeiKe {
   @prop()
-  id: String
+  id: string
 
   @prop()
-  title: String
+  title: string
 
   @prop()
-  href: String
+  href: string
 
   @prop()
-  img: String
+  img: string
 
   @prop()
-  price: Array<Number>
+  price: Array<number>
 
   @prop()
-  time: Array<Number>
+  time: Array<number>
 
   @prop()
-  from: Array<String>
+  from: Array<string>
 }

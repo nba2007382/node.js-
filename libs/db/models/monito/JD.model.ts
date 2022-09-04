@@ -6,19 +6,19 @@ export class JD {
   id: Number
 
   @prop()
-  title: String
+  title: string
 
   @prop()
-  href: String
+  href: string
 
   @prop()
-  img: String
+  img: string
 
   @prop()
   price: Array<Number>
 
   @prop()
-  label: String
+  label: string
 
   @prop()
   time: Array<Number>

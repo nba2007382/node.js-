@@ -1,4 +1,3 @@
-import { HttpModule } from '@nestjs/axios';
 import { Global, Module } from '@nestjs/common';
 import { TypegooseModule } from 'nestjs-typegoose';
 import { User } from '../models/user/user.model';
@@ -9,7 +8,7 @@ import { BeiKe } from '../models/monito/BeiKe.model';
 import { JD } from '../models/monito/JD.model';
 import { WeiBo } from '../models/monito/WeiBo.model';
 import { Movie } from '../models/movie/movie.model';
-
+import { HttpModule } from '@nestjs/axios';
 const models = TypegooseModule.forFeature([
   User,
   House,
@@ -23,7 +22,7 @@ const models = TypegooseModule.forFeature([
 @Global()
 @Module({
   imports: [
-    TypegooseModule.forRoot('mongodb://localhost:27017'),
+    TypegooseModule.forRoot('mongodb://localhost:27017/Steward'),
     HttpModule,
     models
   ],

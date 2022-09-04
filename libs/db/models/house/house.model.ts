@@ -1,12 +1,10 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { prop, ReturnModelType } from '@typegoose/typegoose';
-
+import { prop } from '@typegoose/typegoose';
 @Injectable()
 export class House {
-  constructor(private readonly httpService: HttpService) {
-    this.httpService
+  constructor() {
+
   }
   @ApiProperty({ description:`ID` })
   @prop({ unique: true })
@@ -47,20 +45,4 @@ export class House {
   @prop()
   time: Number
 
-  public static async updata (this: ReturnModelType<typeof House>) {
-    const type = ['xiangzhouqu', 'jinwanqu', 'doumenqu'];
-    let allFilms = [];
-    for (let j = 0; j < type.length; j++) {
-      const County = type[j];
-      const stopNum = 101;
-      for (let i = 1; i < stopNum; i++) { 
-        let url = 'https://zh.ke.com/ershoufang/' + County + '/pg' + i + 'co42/';
-        await new Promise((resolve) => {
-          setTimeout(async() => {
-            await this.
-          },500);
-         });
-      }
-     }
-  }
 }
