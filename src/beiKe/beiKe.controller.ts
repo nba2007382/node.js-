@@ -4,7 +4,7 @@ import { DbService } from 'libs/db/src/db.service'
 @ApiTags('贝壳')
 @Injectable()
 @Controller('house')
-export class HouseController {
+export class BeiKeController {
   constructor( private readonly Db: DbService) {
 
   }

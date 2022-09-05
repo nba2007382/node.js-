@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { prop } from '@typegoose/typegoose';
 @Injectable()
-export class House {
+export class BeiKe {
   constructor() {
 
   }

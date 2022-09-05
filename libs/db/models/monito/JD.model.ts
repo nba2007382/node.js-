@@ -1,7 +1,7 @@
 import { prop } from "@typegoose/typegoose";
 
 
-export class JD {
+export class Monito_Jd {
   @prop()
   id: Number
 

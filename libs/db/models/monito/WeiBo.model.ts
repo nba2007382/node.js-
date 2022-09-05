@@ -1,7 +1,7 @@
 import { prop } from "@typegoose/typegoose";
 
 
-export class WeiBo {
+export class Monito_WeiBo {
   @prop({unique: true})
   id: number
 
