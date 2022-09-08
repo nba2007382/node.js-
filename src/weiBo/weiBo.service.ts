@@ -15,9 +15,18 @@ export class WeiBoService {
 
   }
 
-  async getMonitorWeiBoContent () {
-    
-  }
+  async getMonitorWeiBoContent (accountEmail: string, watchId: string, pags: number) {
+    let top = [];
+    if (pags === 0) {
+      top = await this.monito_WeiBo.find({from: accountEmail, 'user.id': watchId ,isTop:1 });
+    };
+    let content=await this.monito_WeiBo.find({from: accountEmail, 'user.id': watchId,$not:{isTop:1}}).skip(pags*10).limit(10 - top.length);
+    content.sort((a,b)=>{
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+    const list = top.concat(...content);
+    return list;
+  };
 
   async getMonitorWeiBoList (accountEmail: string) {
     const list = await this.monito_WeiBo.aggregate(
@@ -41,7 +50,7 @@ export class WeiBoService {
         }
       ]);
     return list;
-  }
+  };
 
   async delMonitorWeiBo (monitoId: string, accountEmail: string) {
     const avator = await this.monito_WeiBo.find({ "user.id": monitoId });

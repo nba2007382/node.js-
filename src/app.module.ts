@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { HouseModule } from './beiKe/beiKe.module';
 import { JdModule } from './jd/jd.module';
 import { WeiBoModule } from './weiBo/weiBo.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { WeiBoModule } from './weiBo/weiBo.module';
     UsersModule,
     HouseModule,
     JdModule,
-    WeiBoModule
+    WeiBoModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
