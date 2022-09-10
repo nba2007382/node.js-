@@ -4,15 +4,15 @@ import { prop } from '@typegoose/typegoose';
 export class User {
   @ApiProperty({ description: `用户名`})
   @prop()
-  name: String
+  name: string
 
   @ApiProperty({ description: `密码`})
   @prop()
-  password: String
+  password: string
 
   @ApiProperty({ description: `邮箱`})
   @prop({ unique: true })
-  email: String
+  email: string
 
   @ApiProperty({ description: `激活状态`})
   @prop()
@@ -20,5 +20,5 @@ export class User {
 
   @ApiProperty({ description: `账号创建时间`})
   @prop()
-  create_time: String
+  create_time: string
 }

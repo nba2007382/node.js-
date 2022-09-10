@@ -7,6 +7,9 @@ import { HouseModule } from './beiKe/beiKe.module';
 import { JdModule } from './jd/jd.module';
 import { WeiBoModule } from './weiBo/weiBo.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AtGuard } from './auth/guards';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -15,9 +18,13 @@ import { AuthModule } from './auth/auth.module';
     HouseModule,
     JdModule,
     WeiBoModule,
-    AuthModule
+    AuthModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: APP_GUARD,
+    useClass: AtGuard
+  }],
 })
 export class AppModule {}

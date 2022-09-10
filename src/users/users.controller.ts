@@ -1,11 +1,13 @@
-import { Controller, Get, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, UseGuards, Body, Res, HttpStatus, forwardRef, Inject } from '@nestjs/common';
 import { User } from 'libs/db/models/user/user.model';
 import { Crud } from 'nestjs-mongoose-crud';
-import { InjectModel } from 'nestjs-typegoose';
 import { ApiTags } from '@nestjs/swagger'
-import { ReturnModelType } from '@typegoose/typegoose';
 import { AuthService } from 'src/auth/auth.service';
-import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
+import { RtGuard, LocalAuthGuard } from 'src/auth/guards';
+import { GetCurrentEmail, GetCurrentUser, Public } from 'libs/decorators';
+import { UsersService } from './users.service';
+import { RegisterDto } from './dto';
+import { Response } from 'express';
 
 @Crud({
   model: User
@@ -14,15 +16,56 @@ import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 @ApiTags('用户')
 export class UsersController {
   constructor(
+    @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-    @InjectModel(User) private readonly user: ReturnModelType<typeof User>
+    private readonly usersService: UsersService
     ) {
     
   }
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Get('login')
-  login (@Request() req) {
-    return this.authService.login(req.user);
+  login (@GetCurrentUser() user: any) {
+    return this.authService.login(user);
+  };
+
+  @Public()
+  @Get('register')
+  async register (@Body() dto: RegisterDto, @Res() res: Response) {
+    const data = await this.usersService.findOne(dto.email);
+    if (!data) {
+      await this.usersService.register(dto);
+      return this.authService.register(dto);
+    } else if (data.status === 0) {
+      res.status(HttpStatus.PRECONDITION_FAILED).send({
+        msg: '账号邮箱已经注册,但还未激活，请前往邮箱激活'
+      });
+    } else {
+      res.status(HttpStatus.PRECONDITION_FAILED).send({
+        msg: '账号邮箱已经注册,请前往登入'
+      });
+    }
+  };
+
+  @Public()
+  @UseGuards(RtGuard)
+  @Get('active')
+  async active(@GetCurrentEmail() email: string) {
+    await this.usersService.active(email);
+    return {
+      msg: '激活成功'
+    }
+  }
+
+  @Get('info')
+  async Information(@GetCurrentEmail() email: string, @Res() res: Response) {
+    const data = await this.usersService.findOne(email);
+    if (!data) {
+      res.status(HttpStatus.NOT_FOUND).send({
+        msg: '账号不存在'
+      });
+    };
+    return data;
   }
 }

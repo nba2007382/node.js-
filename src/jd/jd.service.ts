@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
 import dayjs from 'dayjs';
-import { Monito_Jd } from 'libs/db/models/monito/JD.model';
+import { Monito_Jd } from 'libs/db/models/monito/Jd.model';
 import { InjectModel } from 'nestjs-typegoose';
 import puppeteer from 'puppeteer';
 @Injectable()

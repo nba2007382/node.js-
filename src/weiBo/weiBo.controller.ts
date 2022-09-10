@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { WeiBoService } from './weiBo.service';
 
 @Controller('weiBo')
@@ -8,7 +8,7 @@ export class WeiBoController {
   };
 
   @Get('list')
-  findList () {
-    return this.weiBoService.getMonitorWeiBoList();
+  findList (accountEmail: string) {
+    return this.weiBoService.getMonitorWeiBoList(accountEmail);
   }
 }
