@@ -14,6 +14,16 @@ export class BeiKeService {
     @InjectModel(Unprice) private readonly beike_Unprice: ReturnModelType<typeof Unprice>,
     @InjectModel(Monito_BeiKe) private readonly monito_BeiKe: ReturnModelType<typeof Monito_BeiKe>
     ) {}
+  
+  async getShowList () {
+    const list = await this.monito_BeiKe.aggregate([{ $sample: { size: 4 } }]);
+    return list;
+  }  
+
+  async getMonitorHouse (monitoId: string) {
+    const data = await this.monito_BeiKe.findOne({ id: monitoId });
+    return data;
+  }
 
   async getMonitorList (accountEmail: string) {
     const list = await this.monito_BeiKe.find({ from: accountEmail });
@@ -50,9 +60,9 @@ export class BeiKeService {
     };
   }
 
-  async updataMonitoBeiKe () {
+  // async updataMonitoBeiKe () {
 
-  }
+  // }
 
   async getChartList () {
     const chart1 = await this.beike_Unprice.aggregate([{ $sort: { 'create_time': -1 } }, { $limit: 3 }, { $sort: { 'name': -1 } }, {

@@ -8,16 +8,26 @@ import { BeiKeService } from './beiKe.service';
 @Controller('house')
 export class BeiKeController {
   constructor(
-    private readonly Db: DbService,
     private readonly beiKeService: BeiKeService
     ) {
 
   }
 
+  @Get('monitorInfo')
+  async getMonitorHouse(@Param('id') id: string) {
+    return await this.beiKeService.getMonitorHouse(id)
+  }
+
   @Public()
   @Get('chart')
-  getChart() {
-    return this.beiKeService.getChartList();
+  async getChart() {
+    return await this.beiKeService.getChartList();
+  }
+
+  @Public()
+  @Get('showList')
+  async getShowList() {
+    return await this.beiKeService.getShowList();
   }
 
   @Get('list')

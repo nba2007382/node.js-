@@ -8,6 +8,11 @@ import puppeteer from 'puppeteer';
 export class JdService {
   constructor (@InjectModel(Monito_Jd) private readonly monito_Jd: ReturnModelType<typeof Monito_Jd>) {}
 
+  async getGoods (monitoId: string) {
+    const goods = await this.monito_Jd.findOne({ id: monitoId });
+    return goods;
+  }
+
   async getMonitorList (accountEmail: string) {
     const list = await this.monito_Jd.find({ from: accountEmail });
     return list;
