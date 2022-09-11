@@ -28,7 +28,7 @@ export class DbService {
 
     }
   
-  async DouBan_movieUpdata () {
+  async douBan_movieUpdata () {
     console.log('豆瓣开始更新');
     const type = ['欧美', '美国', '日本'];
     let allFilms = [];
@@ -183,7 +183,7 @@ export class DbService {
     console.log('正在更新贝壳均价完毕');
   }
 
-  async houseAllUpdata() {
+  async beiKe_houseListUpdata() {
     console.log('更新贝壳列表');
     const type = ['xiangzhouqu', 'jinwanqu', 'doumenqu'];
     let allFilms = [];

@@ -8,6 +8,7 @@ import { GetCurrentEmail, GetCurrentUser, Public } from 'libs/decorators';
 import { UsersService } from './users.service';
 import { RegisterDto } from './dto';
 import { Response } from 'express';
+import { EmailService } from 'src/email/email.service';
 
 @Crud({
   model: User
@@ -18,7 +19,8 @@ export class UsersController {
   constructor(
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly emailService: EmailService
     ) {
     
   }
@@ -36,8 +38,11 @@ export class UsersController {
     const data = await this.usersService.findOne(dto.email);
     if (!data) {
       await this.usersService.register(dto);
-      return this.authService.register(dto);
+      await this.emailService.sendRegisterEmail(dto.email, dto);
+      const token = await this.authService.register(dto);
+      res.status(HttpStatus.CREATED).send(token);
     } else if (data.status === 0) {
+      await this.emailService.sendRegisterEmail(dto.email, dto);
       res.status(HttpStatus.PRECONDITION_FAILED).send({
         msg: '账号邮箱已经注册,但还未激活，请前往邮箱激活'
       });

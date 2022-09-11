@@ -10,6 +10,10 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from './auth/guards';
 import { ScheduleModule } from '@nestjs/schedule';
+import { TaskService } from './task/task.service';
+import { TaskModule } from './task/task.module';
+import { EmailModule } from './email/email.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -19,12 +23,18 @@ import { ScheduleModule } from '@nestjs/schedule';
     JdModule,
     WeiBoModule,
     AuthModule,
-    ScheduleModule.forRoot()
+    ScheduleModule.forRoot(),
+    TaskModule,
+    EmailModule,
+    ConfigModule.forRoot({
+      envFilePath: '.development.env',
+      isGlobal: true
+    })
   ],
   controllers: [AppController],
   providers: [AppService, {
     provide: APP_GUARD,
     useClass: AtGuard
-  }],
+  }, TaskService],
 })
 export class AppModule {}
