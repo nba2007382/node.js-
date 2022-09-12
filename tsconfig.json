@@ -29,6 +29,12 @@
       ],
       "@lib/cookie/*": [
         "libs/cookie/src/*"
+      ],
+      "@lib/redis": [
+        "libs/redis/src"
+      ],
+      "@lib/redis/*": [
+        "libs/redis/src/*"
       ]
     }
   }

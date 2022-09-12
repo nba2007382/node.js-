@@ -73,4 +73,12 @@ export class UsersController {
     };
     return data;
   }
+
+  @Get('out')
+  async loginOut (@GetCurrentEmail() email: string) {
+    await this.usersService.loginOut(email);
+    return {
+      msg: '退出登陆成功'
+    };
+  }
 }
