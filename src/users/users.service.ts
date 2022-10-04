@@ -9,42 +9,46 @@ import { AuthService } from 'src/auth/auth.service';
 export class UsersService {
   constructor(
     private readonly redisService: RedisService,
-    @InjectModel(User) private readonly user: ReturnModelType<typeof User>
-    ) {
-    
-  }
+    @InjectModel(User) private readonly user: ReturnModelType<typeof User>,
+  ) {}
 
-  async findOne (accountEmail: string) {
+  async findOne(accountEmail: string) {
     const data = await this.user.findOne({ email: accountEmail });
     return data;
-  };
+  }
 
-  async active (accountEmail: string) {
+  async active(accountEmail: string) {
     await this.user.updateOne(
       {
-        email: accountEmail
+        email: accountEmail,
       },
       {
         $set: {
-          status: 1
-        }
-      }
+          status: 1,
+        },
+      },
     );
   }
 
-  async register (user: any) {
+  async register(user: any) {
     const userInfo = Object.assign(
       {
-      status: 0,
-      create_time: Date.now()
+        status: 0,
+        create_time: Date.now(),
       },
-      user
+      user,
     );
     await this.user.insertMany(userInfo);
   }
 
-  async loginOut (accountEmail: string) {
-    const access_token = await this.redisService.getEmailbyToken(`${accountEmail}_access`);
-    const refresh_token = await this.redisService.getEmailbyToken(`${accountEmail}_refresh`)
+  async loginOut(accountEmail: string) {
+    const access_token = await this.redisService.get(`${accountEmail}_access`);
+    const refresh_token = await this.redisService.get(
+      `${accountEmail}_refresh`,
+    );
+    this.redisService.del(access_token);
+    this.redisService.del(refresh_token);
+    this.redisService.del(`${accountEmail}_access`);
+    this.redisService.del(`${accountEmail}_refresh`);
   }
 }

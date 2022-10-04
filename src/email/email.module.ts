@@ -13,17 +13,17 @@ import { EmailService } from './email.service';
           secure: true,
           auth: {
             user: '1143571151@qq.com',
-            pass: 'ssthhxznovshhbac' //anzjtdlmvpuvbcjc.pmoayaasziaebcfj
-          }
+            pass: 'ssthhxznovshhbac', //anzjtdlmvpuvbcjc.pmoayaasziaebcfj
+          },
         },
         defaults: {
-          from: '"监控管家" <1143571151@qq.com>'
-        }
-      })
+          from: '"监控管家" <1143571151@qq.com>',
+        },
+      }),
     }),
-    AuthModule
+    AuthModule,
   ],
   providers: [EmailService],
-  exports: [EmailService]
+  exports: [EmailService],
 })
 export class EmailModule {}

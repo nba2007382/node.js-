@@ -7,16 +7,16 @@ import { Cache } from 'cache-manager';
 export class RedisService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-	async get(key: string) {
-		const email: string | null = await this.cacheManager.get(key);
-		return email;
-	};
+  async get(key: string) {
+    const email: string | null = await this.cacheManager.get(key);
+    return email;
+  }
 
-	set (key: string, value: string, time: number) {
-		this.cacheManager.set(key, value,{ ttl: time });
-	}
+  set(key: string, value: string, time: number) {
+    this.cacheManager.set(key, value, { ttl: time });
+  }
 
-	del (key: string) {
-		this.cacheManager.del(key)
-	}
+  del(key: string) {
+    this.cacheManager.del(key);
+  }
 }

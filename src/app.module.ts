@@ -28,13 +28,17 @@ import { ConfigModule } from '@nestjs/config';
     EmailModule,
     ConfigModule.forRoot({
       envFilePath: '.development.env',
-      isGlobal: true
-    })
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, {
-    provide: APP_GUARD,
-    useClass: AtGuard
-  }, TaskService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AtGuard,
+    },
+    TaskService,
+  ],
 })
 export class AppModule {}

@@ -8,73 +8,96 @@ import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class WeiBoService {
-  constructor (
+  constructor(
     private readonly axios: HttpService,
     private readonly Cookie: CookieService,
-    @InjectModel(Monito_WeiBo) private readonly monito_WeiBo: ReturnModelType<typeof Monito_WeiBo>) {
+    @InjectModel(Monito_WeiBo)
+    private readonly monito_WeiBo: ReturnModelType<typeof Monito_WeiBo>,
+  ) {}
 
-  }
-
-  async getMonitorWeiBoContent (accountEmail: string, watchId: string, pags: number) {
+  async getMonitorWeiBoContent(
+    accountEmail: string,
+    watchId: string,
+    pags: number,
+  ) {
     let top = [];
     if (pags === 0) {
-      top = await this.monito_WeiBo.find({from: accountEmail, 'user.id': watchId ,isTop:1 });
-    };
-    let content=await this.monito_WeiBo.find({from: accountEmail, 'user.id': watchId,$not:{isTop:1}}).skip(pags*10).limit(10 - top.length);
-    content.sort((a,b)=>{
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      top = await this.monito_WeiBo.find({
+        from: accountEmail,
+        'user.id': watchId,
+        isTop: 1,
+      });
+    }
+    const content = await this.monito_WeiBo
+      .find({ from: accountEmail, 'user.id': watchId, $not: { isTop: 1 } })
+      .skip(pags * 10)
+      .limit(10 - top.length);
+    content.sort((a, b) => {
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
     });
     const list = top.concat(...content);
     return list;
-  };
-
-  async getMonitorWeiBoList (accountEmail: string) {
-    const list = await this.monito_WeiBo.aggregate(
-      [
-        { 
-          $match: { 
-            from: accountEmail
-          } 
-        }, {
-          $group: {
-            _id:'$user.id',
-            user: {
-              $first: '$user'
-            }
-          },
-        }, {
-          $project: {
-            user:'$user',
-            _id:0    
-          }
-        }
-      ]);
-    return list;
-  };
-
-  async delMonitorWeiBo (monitoId: string, accountEmail: string) {
-    const avator = await this.monito_WeiBo.find({ "user.id": monitoId });
-    if (avator[0].from.length == 1) {
-      await this.monito_WeiBo.deleteMany({ "user.id": monitoId });
-    } else {
-      await this.monito_WeiBo.updateMany({ "user.id": monitoId }, { $pull: { from: { $in: [accountEmail] } } });
-    };
   }
 
-  async createMonitorWeiBo (monitoUrl: string, monitoId: string, accountEmail: string) {
-    console.log("开始添加微博监控");
+  async getMonitorWeiBoList(accountEmail: string) {
+    const list = await this.monito_WeiBo.aggregate([
+      {
+        $match: {
+          from: accountEmail,
+        },
+      },
+      {
+        $group: {
+          _id: '$user.id',
+          user: {
+            $first: '$user',
+          },
+        },
+      },
+      {
+        $project: {
+          user: '$user',
+          _id: 0,
+        },
+      },
+    ]);
+    return list;
+  }
+
+  async delMonitorWeiBo(monitoId: string, accountEmail: string) {
+    const avator = await this.monito_WeiBo.find({ 'user.id': monitoId });
+    if (avator[0].from.length == 1) {
+      await this.monito_WeiBo.deleteMany({ 'user.id': monitoId });
+    } else {
+      await this.monito_WeiBo.updateMany(
+        { 'user.id': monitoId },
+        { $pull: { from: { $in: [accountEmail] } } },
+      );
+    }
+  }
+
+  async createMonitorWeiBo(
+    monitoUrl: string,
+    monitoId: string,
+    accountEmail: string,
+  ) {
+    console.log('开始添加微博监控');
     let page = 1;
-    let cookieData= await this.Cookie.getcookie();
-    cookieData= cookieData.data.sub ? cookieData : await this.Cookie.getcookie();
-    const cookie=`SUB=${ cookieData.data.sub };SUBP=${ cookieData.data.subp }`;
+    let cookieData = await this.Cookie.getcookie();
+    cookieData = cookieData.data.sub
+      ? cookieData
+      : await this.Cookie.getcookie();
+    const cookie = `SUB=${cookieData.data.sub};SUBP=${cookieData.data.subp}`;
     while (page !== -1) {
-      const url = `https://weibo.com/ajax/statuses/mymblog?uid=${ monitoId }&page=${ page }&feature=0`;
-      const res = await lastValueFrom (
+      const url = `https://weibo.com/ajax/statuses/mymblog?uid=${monitoId}&page=${page}&feature=0`;
+      const res = await lastValueFrom(
         this.axios.get(url, {
           headers: {
-            Cookie: cookie
-          }
-        })
+            Cookie: cookie,
+          },
+        }),
       );
       const html = res.data + '';
       const data = JSON.parse(html);
@@ -90,8 +113,8 @@ export class WeiBoService {
         page++;
       } else {
         page = -1;
-      };
-    };
-    console.log("微博监控添加完毕");
+      }
+    }
+    console.log('微博监控添加完毕');
   }
 }

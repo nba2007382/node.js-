@@ -5,11 +5,12 @@ import { DbService } from './db.service';
 import { BeiKe } from '../models/house/BeiKe.model';
 import { Unprice } from '../models/house/unprice.model';
 import { Monito_BeiKe } from '../models/monito/BeiKe.model';
-import { Monito_Jd  } from '../models/monito/Jd.model';
+import { Monito_Jd } from '../models/monito/Jd.model';
 import { Monito_WeiBo } from '../models/monito/WeiBo.model';
 import { Movie } from '../models/movie/movie.model';
 import { HttpModule } from '@nestjs/axios';
 import { CookieModule } from '@lib/cookie';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 const models = TypegooseModule.forFeature([
   User,
   Monito_BeiKe,
@@ -17,16 +18,25 @@ const models = TypegooseModule.forFeature([
   BeiKe,
   Monito_Jd,
   Monito_WeiBo,
-  Movie
+  Movie,
 ]);
 
 @Global()
 @Module({
   imports: [
-    TypegooseModule.forRoot('mongodb://localhost:27017/Steward'),
+    TypegooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const HOST = configService.get('DB_HOST');
+        return {
+          uri: HOST,
+        };
+      },
+    }),
     HttpModule,
     CookieModule,
-    models
+    models,
   ],
   providers: [DbService],
   exports: [DbService, models],

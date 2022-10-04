@@ -34,10 +34,10 @@ export class AuthService {
         secret: jwtConstants.refresh_secret
       })
     ]);
-    this.redisService.setToken(access_token, user.accountEmail, 60*60);
-    this.redisService.setToken(`${user.accountEmail}_access`, access_token, 60*60);
-    this.redisService.setToken(refresh_token, user.accountEmail, 60*60*8);
-    this.redisService.setToken(`${user.accountEmail}_refresh`, refresh_token, 60*60*8);
+    this.redisService.set(access_token, user.accountEmail, 60*60);
+    this.redisService.set(`${user.accountEmail}_access`, access_token, 60*60);
+    this.redisService.set(refresh_token, user.accountEmail, 60*60*8);
+    this.redisService.set(`${user.accountEmail}_refresh`, refresh_token, 60*60*8);
     return {
       access_token,
       refresh_token
@@ -50,7 +50,7 @@ export class AuthService {
       expiresIn: '3h',
       secret: jwtConstants.register_secret
     });
-    this.redisService.setToken(register_token, user.accountEmail, 60*60*3);
+    this.redisService.set(register_token, user.accountEmail, 60*60*3);
     return register_token;
   }
 }
